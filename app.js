@@ -59,7 +59,7 @@ const operate = (operator, num1, num2) => {
     return result;
 }
 
-let resultAdd = operate('add', num1, num2);
+// let resultAdd = operate('add', num1, num2);
 // let resultSub = operate('subtract', 10, 5);
 // let resultMul = operate('multiply', 10, 5);
 // let resultDiv = operate('divide', 10, 5);
@@ -67,7 +67,6 @@ let resultAdd = operate('add', num1, num2);
 numButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         print.textContent += e.target.textContent;
-        // mainScreen.textContent += e.target.textContent;
 
         if(!moveNextNum){
             mainScreen.textContent += e.target.textContent;
@@ -78,13 +77,9 @@ numButtons.forEach(button => {
             clearForNextNum = false;
         }
         if(moveNextNum) {
-            // mainScreen.textContent = '';
             mainScreen.textContent += e.target.textContent;
             num2 = mainScreen.textContent;
-            // moveNextNum = false;
         }
-        // if(!num1 && !num2){num1 = mainScreen.textContent}
-        // if(num1 && !num2){num2 = mainScreen.textContent}
         console.log(e.target.textContent);
         console.log('num1: ', num1);
         console.log('num2: ', num2);
@@ -97,8 +92,15 @@ operateButtons.forEach(button => {
         //call operate function to calculate num1 and num2 behind scenes
         //store result somewhere to use later
         //use that result + num2;
-
         print.textContent += e.target.textContent;
+
+        operatorClickCount++;
+        if(operatorClickCount > 1){
+            result = operate(operator, parseInt(num1), parseInt(num2));
+            num1 = result;
+        }
+        console.log('operatorClickCount: ', operatorClickCount)
+
         switch(e.target.textContent){
             case '+':
                 operator = 'add';
@@ -113,7 +115,7 @@ operateButtons.forEach(button => {
                 operator = 'divide';
                 break;
         }
-        // num1 = mainScreen.textContent;
+        
         moveNextNum = true;
         clearForNextNum = true;
 
@@ -125,7 +127,6 @@ operateButtons.forEach(button => {
 })
 
 equals.addEventListener('click', (e) => {
-    // num2 = mainScreen.textContent;
     print.textContent += e.target.textContent;
     console.log('num1: ', num1);
     console.log('num2: ', num2);
@@ -135,6 +136,7 @@ equals.addEventListener('click', (e) => {
     num1 = result;
     equalClicked = true;
     moveNextNum = false;
+    operatorClickCount = 0;
 })
 
 clear.addEventListener('click', () => {
