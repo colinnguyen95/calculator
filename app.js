@@ -5,6 +5,7 @@ const operateButtons = document.querySelectorAll('.operator');
 const mainScreen = document.createElement('div');
 const equals = document.querySelector('.equals');
 const clear = document.querySelector('.clear');
+const deleteBtn = document.querySelector('.delete');
 mainScreen.textContent = '';
 mainScreen.classList.add('main-screen');
 display.appendChild(mainScreen);
@@ -59,10 +60,32 @@ const operate = (operator, num1, num2) => {
     return result;
 }
 
-// let resultAdd = operate('add', num1, num2);
-// let resultSub = operate('subtract', 10, 5);
-// let resultMul = operate('multiply', 10, 5);
-// let resultDiv = operate('divide', 10, 5);
+const clearFunc = () => {
+    mainScreen.textContent = '';
+    print.textContent = '';
+    equalClicked = false;
+    moveNextNum = false;
+    operatorClickCount = 0;
+    num1 = undefined;
+    num2 = undefined;
+    result = undefined;
+}
+
+const deleteFunc = () => {
+    let mainScreenDelete = mainScreen.textContent;
+    let printScreenDelete = print.textContent;
+    let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
+    let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
+    mainScreen.textContent = b;
+    print.textContent = c;
+    if(!moveNextNum){
+        num1 = mainScreen.textContent
+    }
+    if(moveNextNum) {
+        num2 = mainScreen.textContent;
+    }
+    console.log('num 1 after delete: ', num1)
+}
 
 numButtons.forEach(button => {
     button.addEventListener('click', (e) => {
@@ -88,16 +111,12 @@ numButtons.forEach(button => {
 
 operateButtons.forEach(button => {
     button.addEventListener('click', e => {
-        //logic for when user clicks operator more than once
-        //call operate function to calculate num1 and num2 behind scenes
-        //store result somewhere to use later
-        //use that result + num2;
         print.textContent += e.target.textContent;
-
         operatorClickCount++;
         if(operatorClickCount > 1){
             result = operate(operator, parseInt(num1), parseInt(num2));
             num1 = result;
+            mainScreen.textContent = num1;
         }
         console.log('operatorClickCount: ', operatorClickCount)
 
@@ -115,7 +134,6 @@ operateButtons.forEach(button => {
                 operator = 'divide';
                 break;
         }
-        
         moveNextNum = true;
         clearForNextNum = true;
 
@@ -127,20 +145,29 @@ operateButtons.forEach(button => {
 })
 
 equals.addEventListener('click', (e) => {
-    print.textContent += e.target.textContent;
-    console.log('num1: ', num1);
-    console.log('num2: ', num2);
-    console.log('operator: ', operator);
-    result = operate(operator, parseInt(num1), parseInt(num2))
-    mainScreen.textContent = result;
-    num1 = result;
-    equalClicked = true;
-    moveNextNum = false;
-    operatorClickCount = 0;
+    if(!num1 || !num2){
+        clearFunc;
+    } else {
+        print.textContent += e.target.textContent;
+        console.log('num1: ', num1);
+        console.log('num2: ', num2);
+        console.log('operator: ', operator);
+        result = operate(operator, parseInt(num1), parseInt(num2))
+    
+        if(result % 1 === 0){
+            mainScreen.textContent = result;
+        } else {
+            mainScreen.textContent = result.toFixed(10);
+        }
+        
+        num1 = result;
+        equalClicked = true;
+        moveNextNum = false;
+        operatorClickCount = 0;
+    }
 })
 
-clear.addEventListener('click', () => {
-    mainScreen.textContent = '';
-    print.textContent = '';
-    equalClicked = false;
-})
+clear.addEventListener('click', clearFunc)
+
+deleteBtn.addEventListener('click', deleteFunc)
+
