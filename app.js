@@ -22,6 +22,8 @@ let moveNextNum = false;
 let equalClicked = false;
 let deleteClicked = false;
 
+const validkeys=[ "0","1","2","3","4","5","6","7","8","9","+","-","x","%","." ];
+
 const add = (num1, num2) => {
     console.log(num1 + num2);
     return num1 + num2;
@@ -173,6 +175,12 @@ operateButtons.forEach(button => {
 })
 
 equals.addEventListener('click', (e) => {
+    if(equalClicked === true){
+        print.textContent = print.textContent;
+        mainScreen.textContent = mainScreen.textContent;
+        return;
+    }
+
     if(!num1 || !num2){
         clearFunc;
     } else {
@@ -193,9 +201,37 @@ equals.addEventListener('click', (e) => {
         moveNextNum = false;
         operatorClickCount = 0;
     }
+    console.log('equalClicked: ', equalClicked);
 })
 
 clear.addEventListener('click', clearFunc)
 
 deleteBtn.addEventListener('click', deleteFunc)
+
+
+document.addEventListener('keydown', (e) => {
+    let key = e.key;
+    console.log(key);
+    if(validkeys.indexOf(key) >= 0){
+        print.textContent += key;
+
+        if(!moveNextNum){
+            // mainScreen.textContent += e.target.textContent;
+            mainScreen.textContent += key;
+            num1 = mainScreen.textContent
+        }
+        if(clearForNextNum){
+            mainScreen.textContent = '';
+            clearForNextNum = false;
+        }
+        if(moveNextNum) {
+            // mainScreen.textContent += e.target.textContent;
+            mainScreen.textContent += key;
+            num2 = mainScreen.textContent;
+        }
+        console.log(e.target.textContent);
+        console.log('num1: ', num1);
+        console.log('num2: ', num2);
+    }
+})
 
