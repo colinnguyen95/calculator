@@ -9,17 +9,18 @@ const deleteBtn = document.querySelector('.delete');
 mainScreen.textContent = '';
 mainScreen.classList.add('main-screen');
 display.appendChild(mainScreen);
+print.textContent = '';
 
 let num1;
 let num2;
 let operator;
 let clearForNextNum = false;
+let operatorClicked = false;
 let operatorClickCount = 0;
 let result;
 let moveNextNum = false; 
 let equalClicked = false;
-
-print.textContent = '';
+let deleteClicked = false;
 
 const add = (num1, num2) => {
     console.log(num1 + num2);
@@ -72,12 +73,36 @@ const clearFunc = () => {
 }
 
 const deleteFunc = () => {
-    let mainScreenDelete = mainScreen.textContent;
-    let printScreenDelete = print.textContent;
-    let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
-    let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
-    mainScreen.textContent = b;
-    print.textContent = c;
+    //If operatorClicked === true, delete only operator value from variable
+    // delete operator string from print
+    // avoid deleting from mainScreen
+    // if operator === true, then operator = undefined
+    if(operatorClicked && deleteClicked === false){
+        deleteClicked = true;
+        operatorClickCount--;
+        operator = undefined;
+        operatorClicked = false;
+        // let mainScreenDelete = mainScreen.textContent;
+        let printScreenDelete = print.textContent;
+        // let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
+        let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
+        // mainScreen.textContent = b;
+        print.textContent = c;
+    } else {
+        let mainScreenDelete = mainScreen.textContent;
+        let printScreenDelete = print.textContent;
+        let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
+        let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
+        mainScreen.textContent = b;
+        print.textContent = c;
+        operatorClickCount--;
+    }
+    // let mainScreenDelete = mainScreen.textContent;
+    // let printScreenDelete = print.textContent;
+    // let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
+    // let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
+    // mainScreen.textContent = b;
+    // print.textContent = c;
     if(!moveNextNum){
         num1 = mainScreen.textContent
     }
@@ -112,6 +137,7 @@ numButtons.forEach(button => {
 operateButtons.forEach(button => {
     button.addEventListener('click', e => {
         print.textContent += e.target.textContent;
+        operatorClicked = true;
         operatorClickCount++;
         if(operatorClickCount > 1){
             result = operate(operator, parseInt(num1), parseInt(num2));
@@ -141,6 +167,8 @@ operateButtons.forEach(button => {
             print.textContent = result + e.target.textContent
             equalClicked = false;
         }
+        console.log('operator: ', operator);
+        console.log('num1 after operator delete', num1);
     })
 })
 
