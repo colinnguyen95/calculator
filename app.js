@@ -105,6 +105,33 @@ const operatorFunc = (e) => {
     console.log('num1 after operator delete', num1);
 }
 
+const numInput = (e) => {
+    const input = e.key? e.key : e.target.textContent;
+    print.textContent += input;
+
+    if(!moveNextNum){
+        mainScreen.textContent += input;
+        if(mainScreen.textContent.includes('.')){
+            decimalBtn.disabled = true;
+        }
+        num1 = mainScreen.textContent
+    }
+    if(clearForNextNum){
+        mainScreen.textContent = '';
+        clearForNextNum = false;
+    }
+    if(moveNextNum) {
+        mainScreen.textContent += input;
+        if(mainScreen.textContent.includes('.')){
+            decimalBtn.disabled = true;
+        }
+        num2 = mainScreen.textContent;
+    }
+    console.log(input);
+    console.log('num1: ', num1);
+    console.log('num2: ', num2);
+}
+
 const clearFunc = () => {
     mainScreen.textContent = '';
     print.textContent = '';
@@ -127,11 +154,9 @@ const deleteFunc = () => {
         operatorClickCount--;
         operator = undefined;
         operatorClicked = false;
-        // let mainScreenDelete = mainScreen.textContent;
+        
         let printScreenDelete = print.textContent;
-        // let b = mainScreenDelete.slice(0, mainScreenDelete.length - 1);
         let c = printScreenDelete.slice(0, printScreenDelete.length - 1);
-        // mainScreen.textContent = b;
         print.textContent = c;
     } else {
         let mainScreenDelete = mainScreen.textContent;
@@ -153,31 +178,7 @@ const deleteFunc = () => {
 }
 
 numButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        print.textContent += e.target.textContent;
-
-        if(!moveNextNum){
-            mainScreen.textContent += e.target.textContent;
-            if(mainScreen.textContent.includes('.')){
-                decimalBtn.disabled = true;
-            }
-            num1 = mainScreen.textContent
-        }
-        if(clearForNextNum){
-            mainScreen.textContent = '';
-            clearForNextNum = false;
-        }
-        if(moveNextNum) {
-            mainScreen.textContent += e.target.textContent;
-            if(mainScreen.textContent.includes('.')){
-                decimalBtn.disabled = true;
-            }
-            num2 = mainScreen.textContent;
-        }
-        console.log(e.target.textContent);
-        console.log('num1: ', num1);
-        console.log('num2: ', num2);
-    })
+    button.addEventListener('click', numInput)
 })
 
 operateButtons.forEach(button => {
@@ -198,8 +199,7 @@ equals.addEventListener('click', (e) => {
         console.log('num1: ', num1);
         console.log('num2: ', num2);
         console.log('operator: ', operator);
-        result = operate(operator, parseFloat(num1), parseFloat(num2))
-        // result = operate(operator, parseInt(num1), parseInt(num2))
+        result = operate(operator, parseFloat(num1), parseFloat(num2));
     
         if(result % 1 === 0){
             mainScreen.textContent = result;
@@ -223,23 +223,7 @@ document.addEventListener('keydown', (e) => {
     let key = e.key;
     
     if(validkeys.indexOf(key) >= 0){
-        print.textContent += key;
-
-        if(!moveNextNum){
-            mainScreen.textContent += key;
-            num1 = mainScreen.textContent
-        }
-        if(clearForNextNum){
-            mainScreen.textContent = '';
-            clearForNextNum = false;
-        }
-        if(moveNextNum) {
-            mainScreen.textContent += key;
-            num2 = mainScreen.textContent;
-        }
-        console.log('num1: ', num1);
-        console.log('num2: ', num2);
-        // console.log('test operator event', e.key);
+        numInput(e);
     }
 
     if(validOperations.indexOf(key) >= 0){
