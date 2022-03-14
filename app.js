@@ -6,6 +6,7 @@ const mainScreen = document.createElement('div');
 const equals = document.querySelector('.equals');
 const clear = document.querySelector('.clear');
 const deleteBtn = document.querySelector('.delete');
+const decimalBtn = document.querySelector('#decimal');
 mainScreen.textContent = '';
 mainScreen.classList.add('main-screen');
 display.appendChild(mainScreen);
@@ -28,7 +29,8 @@ const validEnterKeys = ["=","Enter"];
 
 const add = (num1, num2) => {
     console.log(num1 + num2);
-    return num1 + num2;
+    let answer = ((num1 + num2) * 10) / 10;
+    return answer;
 }
 
 const subtract = (num1, num2) => {
@@ -70,6 +72,7 @@ const operatorFunc = (e) => {
     print.textContent += action;
     operatorClicked = true;
     operatorClickCount++;
+    decimalBtn.disabled = false;
     if(operatorClickCount > 1){
         result = operate(operator, parseInt(num1), parseInt(num2));
         num1 = result;
@@ -111,6 +114,7 @@ const clearFunc = () => {
     num1 = undefined;
     num2 = undefined;
     result = undefined;
+    decimalBtn.disabled = false;
 }
 
 const deleteFunc = () => {
@@ -154,6 +158,9 @@ numButtons.forEach(button => {
 
         if(!moveNextNum){
             mainScreen.textContent += e.target.textContent;
+            if(mainScreen.textContent.includes('.')){
+                decimalBtn.disabled = true;
+            }
             num1 = mainScreen.textContent
         }
         if(clearForNextNum){
@@ -162,6 +169,9 @@ numButtons.forEach(button => {
         }
         if(moveNextNum) {
             mainScreen.textContent += e.target.textContent;
+            if(mainScreen.textContent.includes('.')){
+                decimalBtn.disabled = true;
+            }
             num2 = mainScreen.textContent;
         }
         console.log(e.target.textContent);
@@ -188,7 +198,8 @@ equals.addEventListener('click', (e) => {
         console.log('num1: ', num1);
         console.log('num2: ', num2);
         console.log('operator: ', operator);
-        result = operate(operator, parseInt(num1), parseInt(num2))
+        result = operate(operator, parseFloat(num1), parseFloat(num2))
+        // result = operate(operator, parseInt(num1), parseInt(num2))
     
         if(result % 1 === 0){
             mainScreen.textContent = result;
